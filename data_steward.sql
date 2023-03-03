@@ -121,10 +121,13 @@ FROM line_items;
 
 
 --2. Propose a data quality meassurement metric for a single data column and data table
---I chose validity for single data column and completeness for a data table
 
 
---2.1 data column
+--2.1. & 2.2.
+-- I chose validity for single data column and completeness for a data table
+
+
+--3. data column
 ---Validity of order id - VALID
 SELECT COUNT(*) AS total_row,
        COUNT(CASE WHEN "ORDER_ID"::text ~ '^[1-9]\d{0,6}(\.\d{1,5})?$' THEN 1 ELSE NULL END) AS valid_rows,
