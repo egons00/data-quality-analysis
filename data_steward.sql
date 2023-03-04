@@ -194,152 +194,169 @@ SELECT field
      , completeness_pct
      , ROW_NUMBER() OVER (ORDER BY completeness_pct ASC) AS completeness_rank
 FROM (
-         SELECT 'MERCHANT_ID'                         AS field
-              , 100 * COUNT("MERCHANT_ID") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'ORDER_ID'                         AS field
-              , 100 * COUNT(o."ORDER_ID") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'SHOP_ID'                         AS field
-              , 100 * COUNT("SHOP_ID") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'ADDRESS_TO_COUNTRY'                         AS field
-              , 100 * COUNT("ADDRESS_TO_COUNTRY") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'ADDRESS_TO_REGION'                         AS field
-              , 100 * COUNT("ADDRESS_TO_REGION") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'ORDER_DT'                         AS field
-              , 100 * COUNT("ORDER_DT") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'FULFILLED_DT'                         AS field
-              , 100 * COUNT("FULFILLED_DT") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'REPRINT_FLAG'                         AS field
-              , 100 * COUNT("REPRINT_FLAG") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'SALES_CHANNEL_TYPE_ID'                         AS field
-              , 100 * COUNT("SALES_CHANNEL_TYPE_ID") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'TOTAL_COST'                         AS field
-              , 100 * COUNT("TOTAL_COST") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'TOTAL_SHIPPING'                         AS field
-              , 100 * COUNT("TOTAL_SHIPPING") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'MERCHANT_REGISTERED_DT'                         AS field
-              , 100 * COUNT("MERCHANT_REGISTERED_DT") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'SUB_IS_ACTIVE_FLAG'                         AS field
-              , 100 * COUNT("SUB_IS_ACTIVE_FLAG") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'SUB_PLAN'                         AS field
-              , 100 * COUNT("SUB_PLAN") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'SHIPMENT_CARRIER'                         AS field
-              , 100 * COUNT("SHIPMENT_CARRIER") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
-         UNION ALL
-         SELECT 'SHIPMENT_DELIVERD_DT'                         AS field
-              , 100 * COUNT("SHIPMENT_DELIVERD_DT") / COUNT(*) AS completeness_pct
-         FROM orders o
-              LEFT JOIN line_items li
-             ON
-             o."ORDER_ID" = li."ORDER_ID"
-         WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-         AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled') -- Checking only orders that were delivered as for the ones that are not there will be null for SHIPMENT_DELIVERD_DT, ADDRESS_TO_COUNTRY, SHIPMENT_CARRIER
-     ) AS completeness_data
-WHERE upper(field) != 'REPRINT_FLAG'
-AND upper(field) != 'SUB_PLAN'; -- As sub_plan will be null for those merchants who do not have the subscription
+    SELECT 'MERCHANT_ID'                         AS field
+         , 100 * COUNT("MERCHANT_ID") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'ORDER_ID'                           AS field
+         , 100 * COUNT(o."ORDER_ID") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'SHOP_ID'                         AS field
+         , 100 * COUNT("SHOP_ID") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'ADDRESS_TO_COUNTRY'                         AS field
+         , 100 * COUNT("ADDRESS_TO_COUNTRY") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'ADDRESS_TO_REGION'                         AS field
+         , 100 * COUNT("ADDRESS_TO_REGION") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'ORDER_DT'                         AS field
+         , 100 * COUNT("ORDER_DT") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'FULFILLED_DT'                         AS field
+         , 100 * COUNT("FULFILLED_DT") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'REPRINT_FLAG'                         AS field
+         , 100 * COUNT("REPRINT_FLAG") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'SALES_CHANNEL_TYPE_ID'                         AS field
+         , 100 * COUNT("SALES_CHANNEL_TYPE_ID") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'TOTAL_COST'                         AS field
+         , 100 * COUNT("TOTAL_COST") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'TOTAL_SHIPPING'                         AS field
+         , 100 * COUNT("TOTAL_SHIPPING") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'MERCHANT_REGISTERED_DT'                         AS field
+         , 100 * COUNT("MERCHANT_REGISTERED_DT") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'SUB_IS_ACTIVE_FLAG'                         AS field
+         , 100 * COUNT("SUB_IS_ACTIVE_FLAG") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'SUB_PLAN'                         AS field
+         , 100 * COUNT("SUB_PLAN") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'SHIPMENT_CARRIER'                         AS field
+         , 100 * COUNT("SHIPMENT_CARRIER") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled')
+    UNION ALL
+    SELECT 'SHIPMENT_DELIVERD_DT'                         AS field
+         , 100 * COUNT("SHIPMENT_DELIVERD_DT") / COUNT(*) AS completeness_pct
+    FROM orders o
+    LEFT JOIN line_items li
+              ON
+                  o."ORDER_ID" = li."ORDER_ID"
+    WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+      AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+      AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure',
+                                          'shipment%cancelled') -- Checking only orders that were delivered as for the ones that are not there will be null for SHIPMENT_DELIVERD_DT, ADDRESS_TO_COUNTRY, SHIPMENT_CARRIER
+) AS completeness_data
+WHERE UPPER(field) != 'REPRINT_FLAG'
+  AND UPPER(field) != 'SUB_PLAN'; -- As sub_plan will be null for those merchants who do not have the subscription
 
 
 SELECT 100 * COUNT("MERCHANT_ID") / COUNT(*)            AS merchant_id_complete_pct
