@@ -3,15 +3,15 @@
 --ORDERS TABLE
 
 --Duplicate order_id. There are 255 duplicate orders
-SELECT COUNT(*)
+SELECT COUNT(*) AS duplicates
 FROM (
-         SELECT "ORDER_ID"        AS order_id
-              , COUNT("ORDER_ID") AS duplicate_count
-         FROM orders
-         GROUP BY 1
-         HAVING COUNT("ORDER_ID") > 1
-         ORDER BY duplicate_count DESC
-     ) dup
+    SELECT "ORDER_ID"        AS order_id
+         , COUNT("ORDER_ID") AS duplicate_count
+    FROM orders
+    GROUP BY 1
+    HAVING COUNT("ORDER_ID") > 1
+    ORDER BY duplicate_count DESC
+) dup
 WHERE duplicate_count > 1;
 
 --All duplicate order %, In total 2.78% of orders are duplicate
@@ -32,7 +32,9 @@ SELECT "ORDER_ID"           AS order_id
      , "SUB_PLAN"           AS sub_plan
 FROM orders
 WHERE "SUB_IS_ACTIVE_FLAG" = TRUE
-  AND "SUB_PLAN" IS NULL;
+    AND "SUB_PLAN" IS NULL
+   OR "SUB_IS_ACTIVE_FLAG" = FALSE
+    AND "SUB_PLAN" IS NOT NULL;
 
 --No shipment carrier is generated even though the order has been delivered. There are 97 cases like this
 SELECT *
