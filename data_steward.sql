@@ -5,7 +5,7 @@
 --Duplicate order_id. There are 255 duplicate orders
 SELECT COUNT(*)
 FROM (
-         SELECT "ORDER_ID"
+         SELECT "ORDER_ID"        AS order_id
               , COUNT("ORDER_ID") AS duplicate_count
          FROM orders
          GROUP BY 1
@@ -21,15 +21,15 @@ SELECT COUNT("ORDER_ID")                                                        
 FROM orders;
 
 --Missing 83 shop ID values in orders
-SELECT COUNT(*)
+SELECT COUNT(*) AS missing_shop_velues
 FROM orders
 WHERE "SHOP_ID" IS NULL
    OR LENGTH("SHOP_ID"::text) < 5;
 
 --Where SUB is active, even though sub plan is null. There are 321 cases like this
-SELECT "ORDER_ID"
-     , "SUB_IS_ACTIVE_FLAG"
-     , "SUB_PLAN"
+SELECT "ORDER_ID"           AS order_id
+     , "SUB_IS_ACTIVE_FLAG" AS sub_is_active
+     , "SUB_PLAN"           AS sub_plan
 FROM orders
 WHERE "SUB_IS_ACTIVE_FLAG" = TRUE
   AND "SUB_PLAN" IS NULL;
@@ -52,33 +52,33 @@ FROM orders
 WHERE (CASE WHEN REGEXP_REPLACE(LOWER("SHIPMENT_CARRIER"), '[_-]', ' ', 'g') LIKE '%ups%' THEN 1 ELSE 0 END) = 1;
 
 --There are 173 rows in orders where the shipment_delivered_dt is smaller than the fulfilled or ordered date
-SELECT COUNT(*)
+SELECT COUNT(*) AS wrong_delivered_dt
 FROM orders
 WHERE "FULFILLED_DT" > "SHIPMENT_DELIVERD_DT";
 
 --There are 247 rows in orders, where the total costs of the order was 0
-SELECT COUNT(*)
+SELECT COUNT(*) AS order_costs_0
 FROM orders
 WHERE "TOTAL_COST" = 0
    OR "TOTAL_COST" IS NULL;
 
 --There are 52 rows in orders, where the shipping costs of the order were negative
-SELECT COUNT(*)
+SELECT COUNT(*) AS negative_shipping_costs
 FROM orders
 WHERE "TOTAL_SHIPPING" < 0;
 
 --There are foreign characters in the address to region field
-SELECT DISTINCT "ADDRESS_TO_REGION"
+SELECT DISTINCT "ADDRESS_TO_REGION" AS address_to_region
               , CASE
                     WHEN "ADDRESS_TO_REGION" = REGEXP_REPLACE("ADDRESS_TO_REGION", '[^a-zA-Z0-9\s]+', '')
                         THEN 'matching'
                     ELSE 'not matching'
-    END AS regex_match
+    END                             AS foreign_character_check
 FROM orders;
 
 --There are orders where the total price is higher than 500,000$, even an order of 86,909,916.16$ which couldn't be correct
 --These are the orders that have this issue: 5876312, 7549260, 7209629, 7453498, 7476675, 6870251, 7074065
-SELECT "ORDER_ID"
+SELECT "ORDER_ID"                               AS order_id
      , "TOTAL_COST"                             AS cost_in_cents
      , CAST("TOTAL_COST" / 100.0 AS DEC(10, 2)) AS dollar_cost
 FROM orders
@@ -112,7 +112,7 @@ FROM line_items
 WHERE "ORDER_ID" = '1750015.166';
 
 --Checking data quality for "quantity" - no issues - 0
-SELECT COUNT(*)
+SELECT COUNT(*) AS zero_quantity
 FROM line_items
 WHERE "QUANTITY" = 0;
 
@@ -153,17 +153,19 @@ FROM line_items;
 
 --3. data column
 ---Validity of order id - VALID
-SELECT COUNT(*) AS total_row,
-       COUNT(CASE WHEN "ORDER_ID"::text ~ '^[1-9]\d{0,6}(\.\d{1,5})?$' THEN 1 ELSE NULL END) AS valid_rows,
-       CONCAT(ROUND((COUNT(CASE WHEN "ORDER_ID"::text ~ '^[1-9]\d{0,6}(\.\d{1,5})?$' THEN 1 ELSE NULL END)*100.0/COUNT(*)), 2), '%') AS validity_percentage
+SELECT COUNT(*)                                                                              AS total_row
+     , COUNT(CASE WHEN "ORDER_ID"::text ~ '^[1-9]\d{0,6}(\.\d{1,5})?$' THEN 1 ELSE NULL END) AS valid_rows
+     , CONCAT(ROUND((COUNT(CASE WHEN "ORDER_ID"::text ~ '^[1-9]\d{0,6}(\.\d{1,5})?$' THEN 1 ELSE NULL END) * 100.0 /
+                     COUNT(*)), 2), '%')                                                     AS validity_percentage
 FROM orders;
 
 --Validity of merchant id - VALID
-select a."MERCHANT_ID", a.length from(
-SELECT "MERCHANT_ID", length("MERCHANT_ID"::text) as length
-FROM orders
-    ) a
-where length > 7;
+SELECT a."MERCHANT_ID", a.length
+FROM (
+         SELECT "MERCHANT_ID", LENGTH("MERCHANT_ID"::text) AS length
+         FROM orders
+     ) a
+WHERE length > 7;
 
 -- Check all date type validity in orders - INVALID
 SELECT COUNT(CASE
@@ -357,7 +359,8 @@ SELECT 100 * COUNT("MERCHANT_ID") / COUNT(*)            AS merchant_id_complete_
      , 100 * COUNT("SHIPMENT_CARRIER") / COUNT(*)       AS shipment_carrier_complete_pct
      , 100 * COUNT("SHIPMENT_DELIVERD_DT") / COUNT(*)   AS shipment_delivered_dt_complete_pct
 FROM orders o
-LEFT JOIN line_items li ON
-    o."ORDER_ID" = li."ORDER_ID"
-WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%' AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
-AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled');
+     LEFT JOIN line_items li ON
+        o."ORDER_ID" = li."ORDER_ID"
+WHERE LOWER(li."ITEM_STATUS") LIKE '%deliver%'
+  AND LOWER(li."ITEM_STATUS") LIKE '%shipment%'
+  AND LOWER(li."ITEM_STATUS") NOT IN ('shipment%failure', 'shipment%cancelled');
